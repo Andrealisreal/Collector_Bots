@@ -8,7 +8,7 @@ namespace Generics.Objects
         [SerializeField] private T _prefab;
         [SerializeField] private int _initialPoolSize = 10;
 
-        private readonly List<T> _pool = new();
+        public List<T> Pool { get; } = new List<T>();
 
         private void Awake()
         {
@@ -18,7 +18,7 @@ namespace Generics.Objects
 
         public T GetObject()
         {
-            foreach (var item in _pool)
+            foreach (var item in Pool)
             {
                 if (item.gameObject.activeInHierarchy)
                     continue;
@@ -39,7 +39,7 @@ namespace Generics.Objects
         {
             var item = Instantiate(_prefab, transform);
             item.gameObject.SetActive(false);
-            _pool.Add(item);
+            Pool.Add(item);
 
             return item;
         }
