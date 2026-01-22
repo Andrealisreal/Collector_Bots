@@ -1,12 +1,11 @@
-using Resources;
+using Generics.Objects;
 using UnityEngine;
 
 namespace Units
 {
-    [RequireComponent(typeof(Unit))]
     [RequireComponent(typeof(CapsuleCollider))]
     [RequireComponent(typeof(UnitMover))]
-    public class Unit : MonoBehaviour
+    public class Unit : PoolableObject<Unit>
     {
         private UnitMover _mover;
         private Transform _basePosition;
@@ -14,6 +13,7 @@ namespace Units
 
         public bool IsBusy { get; private set; }
         public bool IsAvailable { get; private set; }
+        public bool IsHold { get; private set; }
 
         private void Awake()
         {
@@ -27,25 +27,31 @@ namespace Units
         private void OnDisable() =>
             _collector.Raised -= MoveToBase;
 
-        public void MoveToTarget(Resource resource)
+        public void MoveToTarget(Transform target)
         {
             IsBusy = true;
-            _mover.Move(resource.transform);
+            _mover.Move(target);
         }
 
         public void SetBasePosition(Transform basePosition) =>
             _basePosition = basePosition;
 
-        public void Release()
+        public override void Release()
         {
+            base.Release();
+            
+            IsHold = false;
             IsBusy = false;
             IsAvailable = false;
+            
+            Debug.Log("Unit Released");
         }
 
-        public void ReturnToBase() =>
+        private void MoveToBase()
+        {
             IsAvailable = true;
-
-        private void MoveToBase() =>
+            IsHold = true;
             _mover.Move(_basePosition);
+        }
     }
 }

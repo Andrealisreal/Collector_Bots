@@ -3,12 +3,14 @@ using UnityEngine;
 
 namespace Generics.Objects
 {
-    public abstract class ObjectsPool<T> : MonoBehaviour where T : Component
+    public abstract class ObjectsPool<T> : MonoBehaviour where T : PoolableObject<T>
     {
         [SerializeField] private T _prefab;
         [SerializeField] private int _initialPoolSize = 10;
 
-        public List<T> Pool { get; } = new List<T>();
+        private readonly List<T> _pool = new();
+
+        public IReadOnlyList<T> Pool => _pool;
 
         private void Awake()
         {
@@ -39,9 +41,16 @@ namespace Generics.Objects
         {
             var item = Instantiate(_prefab, transform);
             item.gameObject.SetActive(false);
-            Pool.Add(item);
+            _pool.Add(item);
+            item.Released += OnObjectReleased;
 
             return item;
+        }
+        
+        private static void OnObjectReleased(T item)
+        {
+            item.Released -= OnObjectReleased;
+            item.gameObject.SetActive(false);
         }
     }
 }

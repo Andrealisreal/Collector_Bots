@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Generics.Spawners
 {
-    public abstract class Spawner<T> : MonoBehaviour where T : Component
+    public abstract class Spawner<T> : MonoBehaviour where T : PoolableObject<T>
     {
         [SerializeField] protected ObjectsPool<T> ObjectsPool;
         [SerializeField] protected float MaxSpawnRadius;

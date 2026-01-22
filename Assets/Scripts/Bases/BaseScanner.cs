@@ -40,7 +40,7 @@ namespace Bases
                     if (_colliders[i] == null)
                         continue;
 
-                    if (_colliders[i].gameObject.TryGetComponent(out Resource resource) && resource.IsReserved == false)
+                    if (_colliders[i].gameObject.TryGetComponent(out Resource resource))
                         Detected?.Invoke(resource);
                 }
 
