@@ -10,27 +10,16 @@ namespace Bases
         [SerializeField] private BaseScanner _baseScanner;
         [SerializeField] private UnitPool _unitPool;
         [SerializeField] private BaseViewStatistics _statistics;
-        [SerializeField] private BaseTriggerHandler _baseTriggerHandler;
         
+        private BaseTriggerHandler _baseTriggerHandler;
         private ResourceHandler _resourceHandler;
         private BaseStorage _storage;
 
         private void Awake()
         {
             _resourceHandler = new ResourceHandler();
-            _baseTriggerHandler = new BaseTriggerHandler(transform.position);
+            _baseTriggerHandler = new BaseTriggerHandler();
             _storage = new BaseStorage();
-        }
-
-        private void FixedUpdate()
-        {
-            _baseTriggerHandler.EnterUnit();
-        }
-
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(transform.position, _baseTriggerHandler.Radius);
         }
 
         private void OnTriggerEnter(Collider other) =>
@@ -61,14 +50,14 @@ namespace Bases
         {
             foreach (var unit in _unitPool.Pool)
             {
-                if (unit.IsBusy)
+                if (unit.IsBusy || unit.IsHold)
                     continue;
 
                 if(_resourceHandler.TryGetFree(out var freeResource) == false)
-                    return;
+                    continue;
                 
-                unit.MoveToTarget(freeResource.transform);
-                unit.SetBasePosition(transform);
+                unit.MoveToTarget(freeResource.transform.position);
+                unit.SetBasePosition(transform.position);
 
                 return;
             }

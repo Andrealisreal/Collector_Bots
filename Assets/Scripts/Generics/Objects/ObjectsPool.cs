@@ -26,6 +26,7 @@ namespace Generics.Objects
                     continue;
 
                 item.gameObject.SetActive(true);
+                item.Released += OnObjectReleased;
 
                 return item;
             }
@@ -33,8 +34,15 @@ namespace Generics.Objects
             var newItem = Create();
 
             newItem.gameObject.SetActive(true);
+            newItem.Released += OnObjectReleased;
 
             return newItem;
+        }
+        
+        protected virtual void OnObjectReleased(T item)
+        {
+            item.Released -= OnObjectReleased;
+            item.gameObject.SetActive(false);
         }
 
         private T Create()
@@ -42,15 +50,8 @@ namespace Generics.Objects
             var item = Instantiate(_prefab, transform);
             item.gameObject.SetActive(false);
             _pool.Add(item);
-            item.Released += OnObjectReleased;
 
             return item;
-        }
-        
-        private static void OnObjectReleased(T item)
-        {
-            item.Released -= OnObjectReleased;
-            item.gameObject.SetActive(false);
         }
     }
 }

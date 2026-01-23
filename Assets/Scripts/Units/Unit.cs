@@ -8,7 +8,7 @@ namespace Units
     public class Unit : PoolableObject<Unit>
     {
         private UnitMover _mover;
-        private Transform _basePosition;
+        private Vector3 _basePosition;
         private UnitCollector _collector;
 
         public bool IsBusy { get; private set; }
@@ -27,13 +27,13 @@ namespace Units
         private void OnDisable() =>
             _collector.Raised -= MoveToBase;
 
-        public void MoveToTarget(Transform target)
+        public void MoveToTarget(Vector3 target)
         {
             IsBusy = true;
             _mover.Move(target);
         }
 
-        public void SetBasePosition(Transform basePosition) =>
+        public void SetBasePosition(Vector3 basePosition) =>
             _basePosition = basePosition;
 
         public override void Release()
@@ -43,12 +43,14 @@ namespace Units
             IsHold = false;
             IsBusy = false;
             IsAvailable = false;
-            
-            Debug.Log("Unit Released");
         }
 
         private void MoveToBase()
         {
+            if (IsHold)
+                return;
+            
+            _collector.CatchUp();
             IsAvailable = true;
             IsHold = true;
             _mover.Move(_basePosition);

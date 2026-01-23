@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace Resources
 {
-    [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(SphereCollider))]
     public class Resource : PoolableObject<Resource>
     {

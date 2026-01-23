@@ -37,7 +37,7 @@ namespace Resources
                 return;
 
             if (_allResources.Contains(resource))
-                _freeResources.Enqueue(resource);
+                _allResources.Remove(resource);
         }
     }
 }

@@ -7,6 +7,8 @@ namespace Units
     public class UnitCollector : MonoBehaviour
     {
         [SerializeField] private Vector3 _offset;
+        
+        private Transform _resource;
 
         public event Action Raised;
 
@@ -14,15 +16,15 @@ namespace Units
         {
             if (other.gameObject.TryGetComponent(out Resource resource) == false)
                 return;
-
-            CatchUp(resource.transform);
+            
+            _resource = resource.transform;
             Raised?.Invoke();
         }
 
-        private void CatchUp(Transform target)
+        public void CatchUp()
         {
-            target.transform.SetParent(transform);
-            target.transform.localPosition = _offset;
+            _resource.transform.SetParent(transform);
+            _resource.transform.localPosition = _offset;
         }
     }
 }

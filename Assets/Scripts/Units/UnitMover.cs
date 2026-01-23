@@ -11,7 +11,7 @@ namespace Units
         private void Awake() =>
             _agent = GetComponent<NavMeshAgent>();
 
-        public void Move(Transform target) =>
-            _agent.SetDestination(target.transform.position);
+        public void Move(Vector3 target) =>
+            _agent.SetDestination(target);
     }
 }

@@ -428,7 +428,6 @@ GameObject:
   m_Component:
   - component: {fileID: 731346737}
   - component: {fileID: 731346739}
-  - component: {fileID: 731346740}
   - component: {fileID: 731346741}
   - component: {fileID: 731346742}
   m_Layer: 0
@@ -471,27 +470,6 @@ MonoBehaviour:
   _baseScanner: {fileID: 68806440}
   _unitPool: {fileID: 1664537113}
   _statistics: {fileID: 1693583062}
-  _baseTriggerHandler:
-    _layerMask:
-      serializedVersion: 2
-      m_Bits: 128
-    _radius: 6.87
---- !u!208 &731346740
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 731346736}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.75, y: 0.5, z: 0.75}
-  m_MoveThreshold: 0.1
-  m_Carve: 0
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
 --- !u!65 &731346741
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -513,33 +491,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2, y: 1, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &731346742
-Rigidbody:
+--- !u!208 &731346742
+NavMeshObstacle:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 731346736}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &872816584
 GameObject:
   m_ObjectHideFlags: 0
@@ -604,7 +571,7 @@ MonoBehaviour:
   - {fileID: 1858772153}
   - {fileID: 2121554610}
   - {fileID: 1623184776}
-  _delay: 1
+  _delay: 6
 --- !u!114 &872816587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1327,7 +1294,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Units.UnitSpawner
   ObjectsPool: {fileID: 1664537113}
-  MaxSpawnRadius: 6
+  MaxSpawnRadius: 10
   _spawnPoint: {fileID: 1664537111}
   _startQuantity: 3
 --- !u!114 &1664537113
