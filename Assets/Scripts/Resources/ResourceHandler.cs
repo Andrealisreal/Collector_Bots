@@ -18,17 +18,16 @@ namespace Resources
     
         public bool TryGetFree(out Resource resource)
         {
-            while (_freeResources.Count > 0)
+            if (_freeResources.Count == 0)
             {
-                resource = _freeResources.Dequeue();
-
-                if (resource != null)
-                    return true;
+                resource = null;
+                
+                return false;
             }
 
-            resource = null;
-        
-            return false;
+            resource = _freeResources.Dequeue();
+            
+            return true;
         }
     
         public void Release(Resource resource)

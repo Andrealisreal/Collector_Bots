@@ -8,10 +8,10 @@ namespace UI.Bases
     {
         [SerializeField] private TextMeshProUGUI _countText;
         
-        private BaseStorage _storage;
-
         private const string InitialText = "Количество ресурсов:";
-
+        
+        private BaseStorage _storage;
+        
         private void Start() =>
             _countText.text = InitialText;
         

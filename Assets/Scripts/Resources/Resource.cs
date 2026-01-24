@@ -8,12 +8,11 @@ namespace Resources
     {
         public override void Release()
         {
-            base.Release();
-
+            transform.SetParent(null);
             transform.position = Vector3.zero;
             transform.rotation = Quaternion.identity;
-
-            transform.SetParent(null);
+            
+            base.Release();
         }
     }
 }

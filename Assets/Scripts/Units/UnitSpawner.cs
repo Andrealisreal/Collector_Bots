@@ -5,16 +5,22 @@ namespace Units
 {
     public class UnitSpawner : Spawner<Unit>
     {
-        [SerializeField] private Transform _spawnPoint;
-        [SerializeField] private float _startQuantity;
+        [field: SerializeField] public float StartQuantity { get; private set; }
 
-        private void Start()
-        {
-            for(var i = 0; i < _startQuantity; i++)
-                Spawn();
-        }
+        [SerializeField] private Unit _prefab;
+        [SerializeField] private Transform _spawnPoint;
 
         protected override Vector3 GetSpawnPosition() =>
             _spawnPoint.position;
+
+        public override Unit Spawn()
+        {
+            var item = Instantiate(_prefab);
+            
+            item.transform.position = GetSpawnPosition() + GetSpawnOffset();
+            item.SetBasePosition(transform);
+            
+            return item;
+        }
     }
 }

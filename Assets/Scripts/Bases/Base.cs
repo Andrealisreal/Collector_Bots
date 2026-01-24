@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Resources;
 using UI.Bases;
 using Units;
@@ -8,23 +9,31 @@ namespace Bases
     public class Base : MonoBehaviour
     {
         [SerializeField] private BaseScanner _baseScanner;
-        [SerializeField] private UnitPool _unitPool;
         [SerializeField] private BaseViewStatistics _statistics;
-        
+        [SerializeField] private float _radiusCollect;
+        [SerializeField] private LayerMask _layerMask;
+
+        private readonly List<Unit> _units = new List<Unit>();
+
         private BaseTriggerHandler _baseTriggerHandler;
         private ResourceHandler _resourceHandler;
         private BaseStorage _storage;
+        private UnitSpawner _unitSpawner;
 
         private void Awake()
         {
+            _unitSpawner = GetComponentInChildren<UnitSpawner>();
             _resourceHandler = new ResourceHandler();
-            _baseTriggerHandler = new BaseTriggerHandler();
+            _baseTriggerHandler = new BaseTriggerHandler(transform.position, _radiusCollect, _layerMask);
             _storage = new BaseStorage();
         }
 
-        private void OnTriggerEnter(Collider other) =>
-            _baseTriggerHandler.OnEnter(other);
-
+        private void Start()
+        {
+            for (var i = 0; i < _unitSpawner.StartQuantity; i++)
+                _units.Add(_unitSpawner.Spawn());
+        }
+        
         private void OnEnable()
         {
             _baseScanner.Detected += OnCollect;
@@ -39,25 +48,33 @@ namespace Bases
             _storage.CountChanged -= _statistics.UpdateCount;
         }
 
+        private void FixedUpdate() =>
+            _baseTriggerHandler.HandleObjects();
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, _radiusCollect);
+        }
+
         private void OnCollect(Resource resource)
         {
             _resourceHandler.Add(resource);
-            
-            SendResource();
+
+            DispatchUnitToResource();
         }
 
-        private void SendResource()
+        private void DispatchUnitToResource()
         {
-            foreach (var unit in _unitPool.Pool)
+            foreach (var unit in _units)
             {
-                if (unit.IsBusy || unit.IsHold)
+                if (unit.IsBusy)
                     continue;
 
-                if(_resourceHandler.TryGetFree(out var freeResource) == false)
+                if (_resourceHandler.TryGetFree(out var freeResource) == false)
                     continue;
                 
-                unit.MoveToTarget(freeResource.transform.position);
-                unit.SetBasePosition(transform.position);
+                unit.MoveToTarget(freeResource.transform);
 
                 return;
             }

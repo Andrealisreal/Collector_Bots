@@ -10,8 +10,6 @@ namespace Generics.Objects
 
         private readonly List<T> _pool = new();
 
-        public IReadOnlyList<T> Pool => _pool;
-
         private void Awake()
         {
             for (var i = 0; i < _initialPoolSize; i++)
@@ -20,34 +18,38 @@ namespace Generics.Objects
 
         public T GetObject()
         {
-            foreach (var item in Pool)
+            T item = null;
+
+            foreach (var obj in _pool)
             {
-                if (item.gameObject.activeInHierarchy)
+                if (obj.gameObject.activeInHierarchy)
                     continue;
 
-                item.gameObject.SetActive(true);
-                item.Released += OnObjectReleased;
-
-                return item;
+                item = obj;
+                break;
             }
 
-            var newItem = Create();
+            if (item == null)
+                item = Create();
+            
+            item.gameObject.SetActive(true);
 
-            newItem.gameObject.SetActive(true);
-            newItem.Released += OnObjectReleased;
+            item.Released += OnObjectReleased;
 
-            return newItem;
+            return item;
         }
-        
-        protected virtual void OnObjectReleased(T item)
+
+
+        private static void OnObjectReleased(T item)
         {
             item.Released -= OnObjectReleased;
+            item.transform.position = Vector3.zero;
             item.gameObject.SetActive(false);
         }
 
         private T Create()
         {
-            var item = Instantiate(_prefab, transform);
+            var item = Instantiate(_prefab);
             item.gameObject.SetActive(false);
             _pool.Add(item);
 

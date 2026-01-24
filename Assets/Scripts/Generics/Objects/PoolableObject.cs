@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Generics.Objects
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class PoolableObject<T> : MonoBehaviour where T : PoolableObject<T>
+    public abstract class PoolableObject<T> : MonoBehaviour where T : PoolableObject<T>
     {
         public event Action<T> Released;
 

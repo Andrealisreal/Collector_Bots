@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.AI;
 
 namespace Units
@@ -11,7 +12,7 @@ namespace Units
         private void Awake() =>
             _agent = GetComponent<NavMeshAgent>();
 
-        public void Move(Vector3 target) =>
-            _agent.SetDestination(target);
+        public void Move(Transform target) =>
+            _agent.SetDestination(target.position);
     }
 }
